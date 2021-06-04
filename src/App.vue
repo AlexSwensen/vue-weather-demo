@@ -1,29 +1,49 @@
 <template>
   <div id="app">
-    <!-- <img alt="Vue logo" src="./assets/logo.png" /> -->
-    <!-- <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" /> -->
+    <NavBar />
+    <div class="container">
+      <h1>Welcome to Weather App</h1>
+      <p>
+        This is a demo app. You can find the source
+        <a
+          target="_blank"
+          href="https://github.com/alexswensen/vue-weather-demo"
+          >here</a
+        >
+      </p>
+      <ZipInput @on-form-submit="zipFormSubmit"></ZipInput>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import HelloWorld from "./components/HelloWorld.vue";
+// import HelloWorld from "./components/HelloWorld.vue";
+import NavBar from "./components/NavBar.vue";
+import ZipInput from "./components/ZipInput.vue";
 
 @Component({
   components: {
-    HelloWorld,
+    NavBar,
+    ZipInput,
   },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  private loading = false;
+  private weatherData = null;
+
+  zipFormSubmit(e: Event): void {
+    console.log(e);
+  }
+}
 </script>
 
-<style>
+<style lang="scss" scoped>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  .container {
+    h1 {
+      /* text-align: center; */
+    }
+  }
 }
 </style>

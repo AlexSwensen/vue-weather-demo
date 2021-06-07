@@ -73,23 +73,46 @@ export class WeatherService {
         dailyData[entry.date].push(entry);
       }
     });
+    const correctedData = this._GetCorrectTemp(dailyData);
 
-    const weatherData: IWeatherListObj[] = [];
-    const keys = Object.keys(dailyData);
-    keys.forEach((key) => {
-      weatherData.push(dailyData[key][0]);
-    });
-    return this._getNeededData(weatherData);
+    const shownData = this._getShownData(correctedData);
+
+    return shownData;
   }
 
-  private static _getNeededData(data: IWeatherListObj[]): IShownWeatherData[] {
-    return data.map((entry) => {
-      return {
-        date: entry.date,
-        chance_of_rain: `${entry.pop * 100}%`,
-        temp_low: `${entry.main.temp_min} °F`,
-        temp_high: `${entry.main.temp_max} °F`,
-      } as IShownWeatherData;
+  private static _getShownData(data: {
+    [key: string]: IWeatherListObj;
+  }): IShownWeatherData[] {
+    const returnData: IShownWeatherData[] = [];
+    Object.keys(data).forEach((key) => {
+      returnData.push({
+        date: data[key].date,
+        chance_of_rain: `${data[key].pop * 100}%`,
+        temp_low: `${data[key].main.temp_min} °F`,
+        temp_high: `${data[key].main.temp_max} °F`,
+      } as IShownWeatherData);
     });
+    return returnData;
+  }
+
+  private static _GetCorrectTemp(data: { [key: string]: IWeatherListObj[] }): {
+    [key: string]: IWeatherListObj;
+  } {
+    const newData = { ...data };
+    const correctedWeatherData: { [key: string]: IWeatherListObj } = {};
+    Object.keys(newData).forEach((key) => {
+      newData[key].forEach((entry) => {
+        if (!correctedWeatherData[key]) {
+          correctedWeatherData[key] = entry;
+        }
+        if (correctedWeatherData[key].main.temp_max <= entry.main.temp_max) {
+          correctedWeatherData[key].main.temp_max = entry.main.temp_max;
+        }
+        if (correctedWeatherData[key].main.temp_min >= entry.main.temp_min) {
+          correctedWeatherData[key].main.temp_min = entry.main.temp_min;
+        }
+      });
+    });
+    return correctedWeatherData;
   }
 }

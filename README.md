@@ -19,3 +19,8 @@ https://openweathermap.org/api/hourly-forecast
 Do not use any of the other available APIs
 
 ## What I would improve
+
+- Add cypress tests with mocked API Response data
+- Add unit tests for each of the components and services
+- Change from a table to a card layout with weather icons
+- Update to Vue 3, but the ecosystem isn't ready yet and many libraries do not have complete documentation.

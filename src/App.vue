@@ -12,6 +12,12 @@
         >
       </p>
       <ZipInput @on-form-submit="zipFormSubmit"></ZipInput>
+
+      <loading-spinner v-if="loading" />
+
+      <div v-if="!loading">
+        <b-table responsive :items="weatherData"></b-table>
+      </div>
     </div>
   </div>
 </template>
@@ -21,19 +27,24 @@ import { Component, Vue } from "vue-property-decorator";
 // import HelloWorld from "./components/HelloWorld.vue";
 import NavBar from "./components/NavBar.vue";
 import ZipInput from "./components/ZipInput.vue";
+import LoadingSpinner from "./components/LoadingSpinner.vue";
+import { IShownWeatherData, WeatherService } from "./services/weather";
 
 @Component({
   components: {
     NavBar,
     ZipInput,
+    LoadingSpinner,
   },
 })
 export default class App extends Vue {
   private loading = false;
-  private weatherData = null;
+  private weatherData: IShownWeatherData[] | null = null;
 
-  zipFormSubmit(e: Event): void {
-    console.log(e);
+  async zipFormSubmit(e: string): Promise<void> {
+    this.loading = true;
+    this.weatherData = await WeatherService.hourlyQuery(e);
+    this.loading = false;
   }
 }
 </script>

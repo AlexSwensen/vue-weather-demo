@@ -1,6 +1,4 @@
-import { DateTime } from "luxon";
 import fetch from "cross-fetch";
-// DateTime.fromMillis().toFormat("DDD");
 
 interface IWeatherDataResponse {
   list: IWeatherListObj[];
